@@ -1,24 +1,137 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container, Stack, TextField, Typography, Button, Box, createTheme, ThemeProvider } from "@mui/material";
+import Todo from "./components/Todo";
+import { useEffect, useState } from "react";
+const theme = createTheme({
+  palette: {
+    primary: {
+      main:'#009688'
+    },
+  },
+  components: {
+    
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#ff0000', // Replace with your desired border color
+            },
+            '&:hover fieldset': {
+              borderColor: '#ff0000', // Replace with your desired border color
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#ff0000', // Replace with your desired border color
+            },
+          },
+        },
+      },
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: '2px solid white', // Replace with your desired border color
+            },
+            '&:hover fieldset': {
+              border: '2px solid primary.main', // Replace with your desired border color
+            },
+            '&.Mui-focused fieldset': {
+              border: '2px solid primary.main', // Replace with your desired border color
+            },
+          },
+        },
+      },
+    },
+  },
+
+});
+
 
 function App() {
+  const [actions, setActions] = useState(null);
+  const [value, setValue] = useState("");
+  const [edited, setEdited] = useState(null);
+  const handleClick = () => {
+    if(value!==''){
+    if (edited) {
+      const newActions = actions.filter((action) => action.id !== edited);
+      setActions([...newActions, { value: value, checked: false, id: edited }]);
+      setEdited(null);
+    } else {
+      const time = new Date();
+      if (actions) {
+        setActions([
+          ...actions,
+          { value: value, checked: false, id: time.getTime() },
+        ]);
+      } else {
+        setActions([{ value: value, checked: false, id: time.getTime() }]);
+      }
+    }
+    setValue("");
+  }
+  };
+  useEffect(() => {
+    if (actions) {
+      localStorage.setItem("actions", JSON.stringify(actions));
+    } else {
+      const items = JSON.parse(localStorage.getItem("actions"));
+      if (items) {
+        setActions(items);
+      }
+    }
+  }, [actions]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ThemeProvider theme={theme}>
+
+    <Stack sx={{width: '100vw', height: '100vh', }} justifyContent={'center'} alignItems={'center'}>
+      <Stack
+        sx={{
+          width: { xs: "100%", sm: "500px", md: "800px" },
+          padding: {'xs': '40px 20px', 'md': '80px 40px'},
+          minHeight: {'xs':'100%', 'sm': "80%"},  
+          background: 'rgba(0,0,0,0.3)',
+          borderRadius: '10%'
+        }}
+        spacing={"50px"}
+        justifyContent={'center'}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <Stack alignItems={"center"} spacing={"10px"}>
+          <TextField
+          InputProps={{
+            style: {
+              fontSize: '24px', 
+              color: 'white'
+            },
+          }}
+          placeholder="Type action..."
+          value={value}
+          sx={{ width: {'xs': '200px', 'sm': '300px'}, fontSize: '30px' }}
+          onChange={(e) => setValue(e.target.value)}
+          />
+          <Button
+            onClick={handleClick}
+            variant="contained"
+            sx={{ width: {'xs': '200px', 'sm': '300px'}, height: '50px', fontSize: '16px', fontWeight: '600', letterSpacing: '10px' }}
+            >
+            {edited ? "edit" : "add"}
+          </Button>
+        </Stack>
+        {actions && (
+          <Todo
+          actions={actions}
+          setActions={setActions}
+          setValue={setValue}
+          setEdited={setEdited}
+          />
+          )}
+      </Stack>
+    </Stack>
+          </ThemeProvider>
   );
 }
 
