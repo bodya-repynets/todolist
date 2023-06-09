@@ -7,46 +7,6 @@ const theme = createTheme({
       main:'#009688'
     },
   },
-  components: {
-    
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ff0000', // Replace with your desired border color
-            },
-            '&:hover fieldset': {
-              borderColor: '#ff0000', // Replace with your desired border color
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#ff0000', // Replace with your desired border color
-            },
-          },
-        },
-      },
-    },
-  },
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              border: '2px solid white', // Replace with your desired border color
-            },
-            '&:hover fieldset': {
-              border: '2px solid primary.main', // Replace with your desired border color
-            },
-            '&.Mui-focused fieldset': {
-              border: '2px solid primary.main', // Replace with your desired border color
-            },
-          },
-        },
-      },
-    },
-  },
-
 });
 
 
